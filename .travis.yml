@@ -3,4 +3,5 @@ python:
   - 3.6
 install:
   - pip install pipenv==2018.10.9
+  - pipenv install --skip-lock
   - pipenv install --dev --skip-lock
