@@ -2,7 +2,7 @@ language: python
 python:
   - 3.6
 install:
-  - pip install pipenv
+  - pip install pipenv==2018.10.9
   - pipenv install --dev --skip-lock
 script:
   - coverage run tests/test_app.py
