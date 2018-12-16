@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+numpy = "*"
+pandas = "*"
+scikit-learn = "*"
+keras = "==2.0.8"
+tensorflow = "==1.4"
+matplotlib = "*"
+seaborn = "*"
+h5py = "*"
+gunicorn = "*"
+
+[dev-packages]
+codecov = "*"
+coverage = "*"
+"flake8" = "*"
+notebook = "*"
+
+[requires]
+python_version = "3.6"
