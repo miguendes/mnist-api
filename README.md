@@ -63,8 +63,33 @@ Example of prediction:
 $ curl -d '{"model":"cnn", "image": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEhISfoivGqb/938AAAAAAAAAAAAAAAAeJF6aqv39/f394az98sNAAAAAAAAAAAAAAAAx7v39/f39/f39+11SUjgnAAAAAAAAAAAAAAAAEtv9/f39/ca29/EAAAAAAAAAAAAAAAAAAAAAAABQnGv9/c0LACuaAAAAAAAAAAAAAAAAAAAAAAAAAA4Bmv1aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIv9vgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALvv1GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACPx4aBsAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUfD9/XcZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtuv39lhsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBd/P27AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPn9+UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAugrf9/c8CAAAAAAAAAAAAAAAAAAAAAAAAACeU5f39/fq2AAAAAAAAAAAAAAAAAAAAAAAAGHLd/f39/clOAAAAAAAAAAAAAAAAAAAAAAAXQtX9/f39xlECAAAAAAAAAAAAAAAAAAAAABKr2/39/f3DUAkAAAAAAAAAAAAAAAAAAAAAN6zi/f39/fSFCwAAAAAAAAAAAAAAAAAAAAAAAIj9/f3Uh4QQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/predict/
 ```
 
+Methodology
+------------
+
+The task has an important restriction: only 500 images to train a model on, including the test set.
+Since this amount is so little to train a good classifier. I decided to do a 10-fold
+cross-validation to find the best model. After that I used a data augmentation technique to increase
+the number of examples. As shown in the notebooks, the results improved a lot.
+
+Three models were implemented: 
+- SVM
+- CNN
+- MLP
+
+All the implementation details are documented in the notebooks.
+
+Scaling up
+-----------
+
+In order to scale this solution to thousands of requests a day one idea is to
+use a cache mechanism, like redis, varnish or memcached. Another idea is to
+'dockerize' the app and use kubernets to scale it horizontally. The goal is to
+have a load balanced such as Ngnix to redirect the requests. 
+
+
 TODOs
 ------------
+- [ ] Deploy to Heroku
 - [ ] Dockerize the app
 - [ ] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
