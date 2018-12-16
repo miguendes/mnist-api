@@ -12,6 +12,7 @@ keras = "==2.0.8"
 tensorflow = "==1.4"
 matplotlib = "*"
 seaborn = "*"
+h5py = "*"
 
 [dev-packages]
 codecov = "*"
