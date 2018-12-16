@@ -52,6 +52,16 @@ $ cd mnist-api/
 $ pipenv install 
 ```
 
+#### (Optional) Docker
+
+You can use the `Dockerfile` provided to run an already setup environment.
+
+``` {.sourceCode .bash}
+docker build -t docker-mnist-api:latest . 
+docker run -d -p 5000:5000 docker-mnist-api
+```
+
+
 Usage
 ------------
 
@@ -70,7 +80,7 @@ $ curl -d '{"model":"cnn", "image": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 ### Heroku
 
-The app is live on Heroku.
+The app has been deployed to Heroku. It's available on:
 
 https://miguel-mnist-api.herokuapp.com/
 
@@ -102,8 +112,7 @@ have a load balanced such as Ngnix to redirect the requests.
 
 TODOs
 ------------
-- [ ] Deploy to Heroku
-- [ ] Dockerize the app
+- [ ] Add tests coverage report 
 - [ ] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
 - [ ] Make the model name optional on the predict 
