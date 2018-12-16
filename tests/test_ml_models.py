@@ -11,6 +11,7 @@ import ml_models
 })
 class TestMNISTModels(unittest.TestCase):
     """A class that contains the tests for the module ml_models."""
+
     def test_list_models_available(self, mock):
         """Tests if the available models is the same as the ones defined in the config file."""
         self.assertListEqual(['cnn', 'mlp', 'svm'], ml_models.list_models())
@@ -32,3 +33,7 @@ class TestMNISTModels(unittest.TestCase):
         with self.assertRaises(ml_models.ModelNotFoundError) as context:
             ml_models.fetch(name)
             self.assertTrue('Model named {name} does not exist.' in str(context.exception))
+
+
+if __name__ == '__main__':
+    unittest.main()
