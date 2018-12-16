@@ -1,0 +1,11 @@
+language: python
+python:
+  - 3.6
+install:
+  - pip install pipenv
+  - pipenv install --dev --skip-lock
+script:
+  - coverage run tests/test_app.py
+  - coverage run tests/test_ml_models.py
+after_success:
+  - codecov
