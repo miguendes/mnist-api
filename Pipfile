@@ -13,6 +13,7 @@ tensorflow = "==1.4"
 matplotlib = "*"
 seaborn = "*"
 h5py = "*"
+gunicorn = "*"
 
 [dev-packages]
 codecov = "*"
