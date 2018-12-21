@@ -1,8 +1,7 @@
 MNIST Api
 ==========================
 
-[![Build Status](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master)](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master) 
-[![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.0/)
+[![Build Status](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master)](https://travis-ci.org/mendesmiguel/mnist-api)[![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.0/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
