@@ -1,12 +1,19 @@
 import json
 import unittest
+from os import path
 from unittest import mock
 
 from app import app
 
+path_prefix = path.dirname(path.abspath(__file__))
+fixtures_path = path.join(path_prefix, 'fixtures')
+ok_three_file = path.join(fixtures_path, 'ok_three.base64')
+large_four_file = path.join(fixtures_path, 'large_four.base64')
+
 
 class TestMNISTApp(unittest.TestCase):
     """Class to test the flask app endpoints"""
+
     @classmethod
     def setUpClass(cls):
         app.config['SERVER_NAME'] = 'localhost:5000'
@@ -24,7 +31,7 @@ class TestMNISTApp(unittest.TestCase):
         self.assertIn('Web API | MNIST Challenge', response.data.decode('utf-8'))
 
     @mock.patch('app.ml_models.fetch')
-    def test_predict(self, fetch_model_mock):
+    def test_predict_with_image_from_dataset(self, fetch_model_mock):
         """Tests if given a valid JSON, the prediction is returned. """
         model_name = 'svm'
         image_b64 = ('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
@@ -48,10 +55,21 @@ class TestMNISTApp(unittest.TestCase):
         response = self.client.post('/predict/', json={'model': model_name, 'image': image_b64})
 
         fetch_model_mock.assert_called_once_with(model_name)
-        model_mock.predict.assert_called_once_with(image_b64.encode())
+        model_mock.predict.assert_called_once_with(image_b64)
 
         self.assertEqual(200, response.status_code)
         self.assertEqual({"prediction": 9}, json.loads(response.get_data(as_text=True)))
+
+    def test_predict_with_real_model(self):
+        """Tests if given a valid JSON, the prediction is returned. """
+        model_name = 'cnn'
+        with open(large_four_file) as img:
+            image_b64 = img.read().replace('\n', '')
+
+        response = self.client.post('/predict/', json={'model': model_name, 'image': image_b64})
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual({"prediction": 4}, json.loads(response.get_data(as_text=True)))
 
     def tearDown(self):
         """Tear down method to get rid of flask context created."""

@@ -32,7 +32,7 @@ def predict():
     image = data['image']
 
     model = ml_models.fetch(model)
-    prediction = model.predict(image.encode())
+    prediction = model.predict(image)
 
     return jsonify({"prediction": prediction})
 
