@@ -14,6 +14,8 @@ matplotlib = "*"
 seaborn = "*"
 h5py = "*"
 gunicorn = "*"
+pillow = "*"
+opencv-python = "*"
 
 [dev-packages]
 codecov = "*"
