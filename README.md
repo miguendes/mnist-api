@@ -118,6 +118,5 @@ TODOs
 - [ ] Add tests coverage report 
 - [ ] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
-- [ ] Make the model name optional on the predict 
 - [ ] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer
 - [ ] Make the model name optional on the predict endpoint so that the result of all models is returned
