@@ -32,7 +32,7 @@ class TestMNISTModels(unittest.TestCase):
         with self.assertRaises(ml_models.ModelNotFoundError) as context:
             name = 'non_existent_model'
             ml_models.fetch(name)
-            self.assertTrue(f'Model named {name} does not exist.' in str(context.exception))
+        self.assertTrue(f'Model named {name} does not exist.' in str(context.exception))
 
 
 if __name__ == '__main__':
