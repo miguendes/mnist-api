@@ -78,7 +78,7 @@ $ curl -d '{"model":"cnn", "image": "iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0j
 "}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/predict/
 ```
 
-#### Warning: this api works only with PNG image. Up to now no other image format is supported.
+#### Warning: this api works only with RGB PNG images. Up to now no other image format is supported.
 
 ### Heroku
 
