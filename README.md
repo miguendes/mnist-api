@@ -1,7 +1,9 @@
 MNIST Api
 ==========================
 
-[![Build Status](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master)](https://travis-ci.org/mendesmiguel/mnist-api)[![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.0/)
+[![Build Status](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master)](https://travis-ci.org/mendesmiguel/mnist-api)
+[![codecov](https://codecov.io/gh/mendesmiguel/mnist-api/branch/master/graph/badge.svg)](https://codecov.io/gh/mendesmiguel/mnist-api)
+[![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.7/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
@@ -86,6 +88,15 @@ The app has also been deployed to Heroku and it's available on:
 
 https://miguel-mnist-api.herokuapp.com/
 
+Example of prediction:
+``` {.sourceCode .bash}
+$ curl -d '{"model":"cnn", "image": "iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAB/UlEQVR4nO3Uv+txURwH8ONHRLosUuRHSSFFVovh+lUYLBaL/0JKSTYMdiVhubk2XWUyMhik7sDiKgpJhKv08Qy3vo+er+f58qWe5fsez6fP63zOOXUQ+sn/islkKhaL9Xq92+0uFot2u329XkmSDAQC3+FcLtdkMjmdTnAvLMuGQqE/WoT/FiORCEEQfD6fpunhcLharRiG4UperxfHcZFIpNPpnkPj8Xij0SAIotVqnc/n25JarcZxHACOx+PX572NXC4XCu9s7Ha7l8slAPR6vefEuxEIBIlEYjqdAsBsNjObza+KBoOBIAjuiRiGUSgUL3FGo9Hv9/f7fQBYrVaRSOTutTwaDMOSyeThcOAGpGna6XS+NCBCyOv17vd7ThyPxxaL5VURIaTX60ejEcuynLvdbmOx2BtchJDD4chms7vdDgA2m41KpXqPixBKp9MAcLlcwuHwe0SZTDafzwGg0+k82uPz+fL5vFQqvVuVSCTNZpO71s8/yF9D0zTDMHa7/XNJKpUWCgVOrFQqPB7vUbRarQJAqVQSi8W36zabjaIoThwMBlar9Uvq954ej4eiKD6fn8vl1us1txiNRrVarVKpRAiVy+VMJjOdTh8dEyGk0WhIkrz7E+92u1QqhWHYE9xHLBZLrVbbbrcfXD6fDwaDEonkO9xP3phfpiAnDIM7k5QAAAAASUVORK5CYII=
+"}' -H "Content-Type: application/json" -X POST https://miguel-mnist-api.herokuapp.com/predict/
+```
+Expected response:
+``` {.sourceCode .bash}
+{"prediction":3}
+```
 
 
 Methodology
