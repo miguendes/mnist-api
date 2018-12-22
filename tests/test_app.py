@@ -79,6 +79,12 @@ class TestMNISTApp(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual({"prediction": 4}, json.loads(response.get_data(as_text=True)))
 
+    def test_list_models(self):
+        response = self.client.get('/models/')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual({"models": ["cnn", "mlp", "svm"]}, json.loads(response.get_data(as_text=True)))
+
+
     def tearDown(self):
         """Tear down method to get rid of flask context created."""
         self.app_context.pop()
