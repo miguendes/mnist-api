@@ -16,6 +16,8 @@ h5py = "*"
 gunicorn = "*"
 pillow = "*"
 opencv-python = "*"
+flask-caching = "*"
+redis = "*"
 
 [dev-packages]
 codecov = "*"

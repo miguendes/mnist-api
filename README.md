@@ -135,8 +135,37 @@ All notebooks are available on the `notebooks` directory.
 Scaling up
 -----------
 
-In order to scale this solution to thousands of requests a day one idea is to
-use a cache mechanism, like redis, varnish or memcached.
+### Caching with Redis
+
+I performed a series of benchmarks using redis as caching mechanism and Apache Bench v2.3 to run the benchmark.
+The code is available on branch `feature/caching`.
+
+The difference between a cached API and a non-cached API is impressive. 
+I simulated a scenario where 10 clients are making 10000 requests each.
+The results are shown bellow:
+
+#### No cache
+```
+$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+....
+
+....
+
+```
+
+#### Caching with Redis
+The caching has a timeout of 50 seconds.
+```
+$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+
+....
+
+....
+
+```
+
+### Aditional approaches
+
 Another idea is to use kubernets to scale it horizontally. In this setting a good idea is to
 have a load balancer such as Ngnix to handle the requests.
 
@@ -145,7 +174,7 @@ TODOs
 ------------
 - [x] Make the weights path on config file plataform agnostic
 - [x] Add tests coverage report 
-- [ ] Add memcached or Varnish to cache api calls
+- [x] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
-- [ ] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer
+- [x] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer
 - [ ] Make the model name optional on the predict endpoint so that the result of all models is returned

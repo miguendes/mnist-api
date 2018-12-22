@@ -1,10 +1,23 @@
 import os
 
 from flask import Flask, jsonify, request, render_template
+from flask_caching import Cache
 
 import ml_models
 
 app = Flask(__name__)
+
+# cache = Cache(app, config={
+#     'CACHE_TYPE': 'redis',
+#     'CACHE_KEY_PREFIX': 'fcache',
+#     'CACHE_REDIS_HOST': 'localhost',
+#     'CACHE_REDIS_PORT': '6379',
+#     'CACHE_REDIS_URL': 'redis://localhost:6379'
+# })
+
+cache = Cache(app, config={
+    'CACHE_TYPE': 'null',
+})
 
 
 @app.route('/')
@@ -14,6 +27,7 @@ def index():
 
 
 @app.route('/predict/', methods=['POST'])
+@cache.cached(timeout=50)
 def predict():
     """ Predicts the digit corresponding to the image passed.
 
@@ -38,6 +52,7 @@ def predict():
 
 
 @app.route('/models/')
+@cache.cached(timeout=50)
 def models():
     """ Returns a list of all models available. """
     return jsonify({"models": ml_models.list_models()})
