@@ -127,8 +127,8 @@ have a load balancer such as Ngnix to handle the requests.
 
 TODOs
 ------------
-- [ ] Make the weights path on config file plataform agnostic
-- [ ] Add tests coverage report 
+- [x] Make the weights path on config file plataform agnostic
+- [x] Add tests coverage report 
 - [ ] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
 - [ ] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer

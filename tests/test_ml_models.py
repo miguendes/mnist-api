@@ -11,9 +11,9 @@ large_four_file = path.join(fixtures_path, 'large_four.base64')
 
 
 @patch('ml_models.jsonload', return_value={
-    "svm": "tests/weights/svm_v1.pkl",
-    "cnn": "tests/weights/cnn_v_test.h5",
-    "mlp": "tests/weights/mlp_v1.h5",
+    "svm": ["tests", "weights", "svm_v1.pkl"],
+    "cnn": ["tests", "weights", "cnn_v_test.h5"],
+    "mlp": ["tests", "weights", "mlp_v1.h5"],
 })
 class TestMNISTModels(unittest.TestCase):
     """A class that contains the tests for the module ml_models."""
