@@ -108,7 +108,3 @@ class TestMNISTModels(unittest.TestCase):
         prediction = model.predict(image_b64)
 
         self.assertEqual(4, prediction)
-
-
-if __name__ == '__main__':
-    unittest.main()

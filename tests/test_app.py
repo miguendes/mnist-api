@@ -3,8 +3,6 @@ import unittest
 from os import path
 from unittest import mock
 
-import pytest
-
 from app import app
 
 path_prefix = path.dirname(path.abspath(__file__))
@@ -84,11 +82,6 @@ class TestMNISTApp(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual({"models": ["cnn", "mlp", "svm"]}, json.loads(response.get_data(as_text=True)))
 
-
     def tearDown(self):
         """Tear down method to get rid of flask context created."""
         self.app_context.pop()
-
-
-if __name__ == '__main__':
-    unittest.main()
