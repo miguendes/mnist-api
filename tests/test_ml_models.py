@@ -50,9 +50,8 @@ class TestMNISTModelsPrediction:
         (ok_three_file, 3),
         (large_four_file, 4),
     ])
-    def test_predict_image(self, mock, model_name, base64_image_file,
-                                                                   expected_prediction):
-        """Tests if the model can predict a image with correct dimension of 28x28. """
+    def test_predict_image(self, mock, model_name, base64_image_file, expected_prediction):
+        """Tests if the model can predict the digit label """
         print(mock, base64_image_file, expected_prediction)
 
         with open(base64_image_file) as img:

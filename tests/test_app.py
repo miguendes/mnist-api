@@ -1,89 +1,48 @@
 import json
-import unittest
 from os import path
-from unittest import mock
+
+import pytest
 
 from app import app
 
 path_prefix = path.dirname(path.abspath(__file__))
 fixtures_path = path.join(path_prefix, 'fixtures')
+ok_three_file = path.join(fixtures_path, 'ok_three.base64')
+large_four_file = path.join(fixtures_path, 'large_four.base64')
 
 
-def ok_three_file():
-    return path.join(fixtures_path, 'ok_three.base64')
+@pytest.fixture
+def client(request):
+    return app.test_client()
 
 
-def large_four_file():
-    return path.join(fixtures_path, 'large_four.base64')
+def test_home(client):
+    """Tests if accessing the index the welcome message is the same as defined in the endpoint."""
+    response = client.get('/')
+    assert 200 == response.status_code
+    assert 'Web API | MNIST Challenge' in response.data.decode('utf-8')
+    assert ('A Flask REST API for handwritten digit recognition'
+            ' using machine learning models.') in response.data.decode('utf-8')
 
 
-class TestMNISTApp(unittest.TestCase):
-    """Class to test the flask app endpoints"""
+def test_list_models(client):
+    response = client.get('/models/')
+    assert 200 == response.status_code
+    assert {"models": ["cnn", "mlp", "svm"]} == json.loads(response.get_data(as_text=True))
 
-    @classmethod
-    def setUpClass(cls):
-        app.config['SERVER_NAME'] = 'localhost:5000'
-        cls.client = app.test_client()
 
-    def setUp(self):
-        """Set up application for testing."""
-        self.app_context = app.app_context()
-        self.app_context.push()
+@pytest.mark.parametrize("base64_image_file, expected_prediction", [
+    (ok_three_file, 3),
+    (large_four_file, 4),
+])
+def test_predict_with_real_model(client, base64_image_file, expected_prediction):
+    """Tests if given a valid JSON, the prediction is returned. """
+    model_name = 'cnn'
+    print(base64_image_file, expected_prediction)
+    with open(base64_image_file) as img:
+        image_b64 = img.read().replace('\n', '')
 
-    def test_home(self):
-        """Tests if accessing the index the welcome message is the same as defined in the endpoint."""
-        response = self.client.get('/')
-        assert 200 == response.status_code
-        assert 'Web API | MNIST Challenge' in response.data.decode('utf-8')
-        assert ('A Flask REST API for handwritten digit recognition'
-                ' using machine learning models.') in response.data.decode('utf-8')
+    response = client.post('/predict/', json={'model': model_name, 'image': image_b64})
 
-    @mock.patch('app.ml_models.fetch')
-    def test_predict_with_image_from_dataset(self, fetch_model_mock):
-        """Tests if given a valid JSON, the prediction is returned. """
-        model_name = 'svm'
-        image_b64 = ('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-                     'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-                     'AAAAAAAAAAAAAAADEhISfoivGqb/938AAAAAAAAAAAAAAAAeJF6aqv39/f394az98sNAAAAAAAAAAAAAAAAx7v39/f39/f3'
-                     '9+11SUjgnAAAAAAAAAAAAAAAAEtv9/f39/ca29/EAAAAAAAAAAAAAAAAAAAAAAABQnGv9/c0LACuaAAAAAAAAAAAAAAAAAA'
-                     'AAAAAAAA4Bmv1aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIv9vgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALvv1GAAAAA'
-                     'AAAAAAAAAAAAAAAAAAAAAAAAAAAACPx4aBsAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUfD9/XcZAAAAAAAAAAAAAAAAAAAA'
-                     'AAAAAAAAAAAtuv39lhsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBd/P27AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPn9+UA'
-                     'AAAAAAAAAAAAAAAAAAAAAAAAAAAAugrf9/c8CAAAAAAAAAAAAAAAAAAAAAAAAACeU5f39/fq2AAAAAAAAAAAAAAAAAAAAAA'
-                     'AAGHLd/f39/clOAAAAAAAAAAAAAAAAAAAAAAAXQtX9/f39xlECAAAAAAAAAAAAAAAAAAAAABKr2/39/f3DUAkAAAAAAAAAA'
-                     'AAAAAAAAAAAN6zi/f39/fSFCwAAAAAAAAAAAAAAAAAAAAAAAIj9/f3Uh4QQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-                     'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-                     'AAA==')
-
-        model_mock = mock.Mock()
-        model_mock.predict.return_value = 9
-
-        fetch_model_mock.return_value = model_mock
-
-        response = self.client.post('/predict/', json={'model': model_name, 'image': image_b64})
-
-        fetch_model_mock.assert_called_once_with(model_name)
-        model_mock.predict.assert_called_once_with(image_b64)
-
-        assert 200 == response.status_code
-        assert {"prediction": 9} == json.loads(response.get_data(as_text=True))
-
-    def test_predict_with_real_model(self):
-        """Tests if given a valid JSON, the prediction is returned. """
-        model_name = 'cnn'
-        with open(large_four_file()) as img:
-            image_b64 = img.read().replace('\n', '')
-
-        response = self.client.post('/predict/', json={'model': model_name, 'image': image_b64})
-
-        assert 200 == response.status_code
-        assert {"prediction": 4} == json.loads(response.get_data(as_text=True))
-
-    def test_list_models(self):
-        response = self.client.get('/models/')
-        assert 200 == response.status_code
-        assert {"models": ["cnn", "mlp", "svm"]} == json.loads(response.get_data(as_text=True))
-
-    def tearDown(self):
-        """Tear down method to get rid of flask context created."""
-        self.app_context.pop()
+    assert 200 == response.status_code
+    assert {"prediction": expected_prediction} == json.loads(response.get_data(as_text=True))
