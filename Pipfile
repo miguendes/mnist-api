@@ -22,6 +22,8 @@ codecov = "*"
 coverage = "*"
 "flake8" = "*"
 notebook = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"
