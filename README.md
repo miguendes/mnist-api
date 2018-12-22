@@ -127,7 +127,7 @@ To run the jupyter notebooks where I performed the EDA and trained the models, d
 ``` {.sourceCode .bash}
 $ cd mnist-api/
 $ pipenv shell
-$ jupyter notebooks
+$ jupyter notebook
 ```
 
 All notebooks are available on the `notebooks` directory.
