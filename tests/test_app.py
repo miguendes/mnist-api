@@ -3,12 +3,20 @@ import unittest
 from os import path
 from unittest import mock
 
+import pytest
+
 from app import app
 
 path_prefix = path.dirname(path.abspath(__file__))
 fixtures_path = path.join(path_prefix, 'fixtures')
-ok_three_file = path.join(fixtures_path, 'ok_three.base64')
-large_four_file = path.join(fixtures_path, 'large_four.base64')
+
+
+def ok_three_file():
+    return path.join(fixtures_path, 'ok_three.base64')
+
+
+def large_four_file():
+    return path.join(fixtures_path, 'large_four.base64')
 
 
 class TestMNISTApp(unittest.TestCase):
@@ -63,7 +71,7 @@ class TestMNISTApp(unittest.TestCase):
     def test_predict_with_real_model(self):
         """Tests if given a valid JSON, the prediction is returned. """
         model_name = 'cnn'
-        with open(large_four_file) as img:
+        with open(large_four_file()) as img:
             image_b64 = img.read().replace('\n', '')
 
         response = self.client.post('/predict/', json={'model': model_name, 'image': image_b64})
