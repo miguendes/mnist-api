@@ -52,8 +52,6 @@ class TestMNISTModelsPrediction:
     ])
     def test_predict_image(self, mock, model_name, base64_image_file, expected_prediction):
         """Tests if the model can predict the digit label """
-        print(mock, base64_image_file, expected_prediction)
-
         with open(base64_image_file) as img:
             image_b64 = img.read().replace('\n', '')
 

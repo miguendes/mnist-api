@@ -31,14 +31,17 @@ def test_list_models(client):
     assert {"models": ["cnn", "mlp", "svm"]} == json.loads(response.get_data(as_text=True))
 
 
+@pytest.mark.parametrize("model_name", [
+    "svm",
+    "cnn",
+    "mlp",
+])
 @pytest.mark.parametrize("base64_image_file, expected_prediction", [
     (ok_three_file, 3),
     (large_four_file, 4),
 ])
-def test_predict_with_real_model(client, base64_image_file, expected_prediction):
+def test_predict_with_real_model(client, base64_image_file, expected_prediction, model_name):
     """Tests if given a valid JSON, the prediction is returned. """
-    model_name = 'cnn'
-    print(base64_image_file, expected_prediction)
     with open(base64_image_file) as img:
         image_b64 = img.read().replace('\n', '')
 
