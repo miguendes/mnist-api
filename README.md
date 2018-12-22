@@ -26,6 +26,10 @@ To run the solution you need the following dependencies:
 - Pipenv 2018+
 - Jupyter Notebook
 - matplotlib
+- opencv-python
+- Pillow
+- gunicorn
+- seaborn
 
 To install Pipenv and Python 3.6 without messing up your environment, in case you don't have them installed,
  I strongly suggest 
@@ -46,11 +50,11 @@ $ git clone git@github.com:mendesmiguel/mnist-api.git
 To install all dependencies, you can use [pipenv](http://pipenv.org/).
 
 Pipenv will spin up a virtualenv and install the dependencies based on a `Pipenv` file inside the root of
-the project. Due to some problems with the latest version, I decided not to include a `Pipenv.lock` file.
+the project. 
 
 ``` {.sourceCode .bash}
 $ cd mnist-api/
-$ pipenv install --skip-lock
+$ pipenv install
 ```
 
 #### (Optional) Docker
@@ -63,7 +67,7 @@ docker run -d -p 5000:5000 docker-mnist-api
 ```
 
 
-How to run the app
+How to run the app locally
 ------------
 
 To run the project locally do:
@@ -116,12 +120,24 @@ All the implementation details are documented in the notebooks.
 
 Once we collect more data, we can test the performance of the current models and retrain them from time to time.
 
+### How to run the notebooks
+
+To run the jupyter notebooks where I performed the EDA and trained the models, do:
+
+``` {.sourceCode .bash}
+$ cd mnist-api/
+$ pipenv shell
+$ jupyter notebooks
+```
+
+All notebooks are available on the `notebooks` directory.
+
 Scaling up
 -----------
 
 In order to scale this solution to thousands of requests a day one idea is to
 use a cache mechanism, like redis, varnish or memcached.
-Another idea is to use kubernets to scale it horizontally. The goal is to
+Another idea is to use kubernets to scale it horizontally. In this setting a good idea is to
 have a load balancer such as Ngnix to handle the requests.
 
 
