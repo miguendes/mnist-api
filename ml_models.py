@@ -36,7 +36,7 @@ def fetch(name):
     K.clear_session()
 
     try:
-        full_weights_path = path.join(path_prefix, load_weights()[name])
+        full_weights_path = path.join(path_prefix, *load_weights()[name])
 
         if name == 'svm':
             return SVMModel(joblib.load(full_weights_path))

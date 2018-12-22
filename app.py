@@ -40,7 +40,7 @@ def predict():
 @app.route('/models/')
 def models():
     """ Returns a list of all models available. """
-    return ml_models.list_models()
+    return jsonify({"models": ml_models.list_models()})
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 {
-  "svm": "data/weights/svm_v1.pkl",
-  "cnn": "data/weights/cnn_v1.h5",
-  "mlp": "data/weights/mlp_v1.h5"
+  "svm": ["data", "weights", "svm_v1.pkl"],
+  "cnn": ["data", "weights", "cnn_v1.h5"],
+  "mlp": ["data", "weights", "mlp_v1.h5"]
 }
