@@ -35,6 +35,8 @@ class TestMNISTApp(unittest.TestCase):
         response = self.client.get('/')
         assert 200 == response.status_code
         assert 'Web API | MNIST Challenge' in response.data.decode('utf-8')
+        assert ('A Flask REST API for handwritten digit recognition'
+                ' using machine learning models.') in response.data.decode('utf-8')
 
     @mock.patch('app.ml_models.fetch')
     def test_predict_with_image_from_dataset(self, fetch_model_mock):

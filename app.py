@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 import ml_models
 
@@ -9,8 +9,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    """ The index endpoint. It just shows a message. """
-    return 'Web API | MNIST Challenge'
+    """ The index endpoint. It renders the home page. """
+    return render_template("home.html")
 
 
 @app.route('/predict/', methods=['POST'])
