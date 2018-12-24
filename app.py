@@ -1,3 +1,4 @@
+import binascii
 import os
 
 from decouple import config
@@ -46,8 +47,9 @@ def predict():
     except ml_models.ModelNotFoundError:
         available_models = ', '.join(ml_models.list_models())
         return jsonify({"error": f"Unexpected model name. Only {available_models} models are available."}), 422
-
-    return jsonify({"prediction": prediction})
+    except (OSError, TypeError, binascii.Error):
+        return jsonify({"error": "Could not perform the prediction. Invalid image base64 image."}), 422
+    return jsonify({"prediction": prediction}), 200
 
 
 @app.route('/models/')

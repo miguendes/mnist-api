@@ -9,11 +9,20 @@ path_prefix = path.dirname(path.abspath(__file__))
 fixtures_path = path.join(path_prefix, 'fixtures')
 ok_three_file = path.join(fixtures_path, 'ok_three.base64')
 large_four_file = path.join(fixtures_path, 'large_four.base64')
+invalid_file = open(path.join(fixtures_path, 'invalid.base64')).read()
 
 
-@pytest.fixture
-def client(request):
-    return app.test_client()
+@pytest.fixture(scope='module')
+def client():
+    testing_client = app.test_client()
+
+    # Establish an application context before running the tests.
+    ctx = app.app_context()
+    ctx.push()
+
+    yield testing_client  # this is where the testing happens!
+
+    ctx.pop()
 
 
 def test_home(client):
@@ -58,3 +67,21 @@ def test_unavailable_model(client):
     assert 422 == response.status_code
     assert ({"error": f"Unexpected model name. Only {available_models} models are available."}
             == json.loads(response.get_data(as_text=True)))
+
+
+@pytest.mark.parametrize("model_name", [
+    "svm",
+    "cnn",
+    "mlp",
+])
+@pytest.mark.parametrize("base64_image_file", [
+    invalid_file,
+    'invalid_base64_image'
+])
+def test_invalid_image(client, model_name, base64_image_file):
+    """Tests if an error message is returned when an invalid image is passed."""
+
+    response = client.post('/predict/', json={'model': model_name, 'image': base64_image_file})
+    assert 422 == response.status_code
+    assert ({"error": "Could not perform the prediction. Invalid image base64 image."} == json.loads(
+        response.get_data(as_text=True)))
