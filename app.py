@@ -40,8 +40,12 @@ def predict():
     model = data['model']
     image = data['image']
 
-    model = ml_models.fetch(model)
-    prediction = model.predict(image)
+    try:
+        model = ml_models.fetch(model)
+        prediction = model.predict(image)
+    except ml_models.ModelNotFoundError:
+        available_models = ', '.join(ml_models.list_models())
+        return jsonify({"error": f"Unexpected model name. Only {available_models} models are available."}), 422
 
     return jsonify({"prediction": prediction})
 
