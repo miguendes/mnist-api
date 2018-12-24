@@ -141,12 +141,12 @@ I performed a series of benchmarks using redis as caching mechanism and Apache B
 The code is available on branch `feature/caching`.
 
 The difference between a cached API and a non-cached API is impressive. 
-I simulated a scenario where 10 clients are making 10000 requests each.
+I simulated a scenario where 100 clients are making 100 requests each.
 The results are shown bellow:
 
 #### No cache
 ```
-$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+$ ab -p post_content.txt -T application/json -c 100 -n 100 http://localhost:8000/predict/
 ....
 Connection Times (ms)
               min  mean[+/-sd] median   max
@@ -161,7 +161,7 @@ Total:        718 38393 22152.5  38660   76234
 #### Caching with Redis
 The caching has a timeout of 50 seconds.
 ```
-$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+$ ab -p post_content.txt -T application/json -c 100 -n 100 http://localhost:8000/predict/
 
 ....
 Connection Times (ms)

@@ -1,3 +1,4 @@
+import binascii
 import os
 
 from decouple import config
@@ -9,9 +10,9 @@ import ml_models
 app = Flask(__name__)
 
 cache = Cache(app, config={
-    'CACHE_TYPE': config('CACHE_TYPE'),
-    'CACHE_KEY_PREFIX': config('CACHE_KEY_PREFIX'),
-    'CACHE_REDIS_URL': config('CACHE_REDIS_URL')
+    'CACHE_TYPE': config('CACHE_TYPE', default='null'), # caching is disabled, to enable set env var CACHE_TYPE=redis
+    'CACHE_KEY_PREFIX': config('CACHE_KEY_PREFIX', default='fcache'),
+    'CACHE_REDIS_URL': config('CACHE_REDIS_URL', default='redis://localhost:6379')
 })
 
 
@@ -46,8 +47,9 @@ def predict():
     except ml_models.ModelNotFoundError:
         available_models = ', '.join(ml_models.list_models())
         return jsonify({"error": f"Unexpected model name. Only {available_models} models are available."}), 422
-
-    return jsonify({"prediction": prediction})
+    except (OSError, TypeError, binascii.Error):
+        return jsonify({"error": "Could not perform the prediction. Invalid image base64 image."}), 422
+    return jsonify({"prediction": prediction}), 200
 
 
 @app.route('/models/')
