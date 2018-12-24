@@ -1,5 +1,6 @@
 import os
 
+from decouple import config
 from flask import Flask, jsonify, request, render_template
 from flask_caching import Cache
 
@@ -7,16 +8,10 @@ import ml_models
 
 app = Flask(__name__)
 
-# cache = Cache(app, config={
-#     'CACHE_TYPE': 'redis',
-#     'CACHE_KEY_PREFIX': 'fcache',
-#     'CACHE_REDIS_HOST': 'localhost',
-#     'CACHE_REDIS_PORT': '6379',
-#     'CACHE_REDIS_URL': 'redis://localhost:6379'
-# })
-
 cache = Cache(app, config={
-    'CACHE_TYPE': 'null',
+    'CACHE_TYPE': config('CACHE_TYPE'),
+    'CACHE_KEY_PREFIX': config('CACHE_KEY_PREFIX'),
+    'CACHE_REDIS_URL': config('CACHE_REDIS_URL')
 })
 
 

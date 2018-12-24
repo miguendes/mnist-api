@@ -148,7 +148,12 @@ The results are shown bellow:
 ```
 $ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
 ....
-
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   0.6      3       4
+Processing:   714 38391 22153.1  38658   76232
+Waiting:      714 38390 22153.1  38657   76232
+Total:        718 38393 22152.5  38660   76234
 ....
 
 ```
@@ -159,7 +164,12 @@ The caching has a timeout of 50 seconds.
 $ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
 
 ....
-
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.6      2       4
+Processing:   706  758  27.2    760     803
+Waiting:      705  758  27.2    760     803
+Total:        709  761  26.5    762     804
 ....
 
 ```

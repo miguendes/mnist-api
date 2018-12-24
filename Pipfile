@@ -18,6 +18,7 @@ pillow = "*"
 opencv-python = "*"
 flask-caching = "*"
 redis = "*"
+python-decouple = "*"
 
 [dev-packages]
 codecov = "*"
