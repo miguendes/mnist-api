@@ -10,7 +10,7 @@ import ml_models
 app = Flask(__name__)
 
 cache = Cache(app, config={
-    'CACHE_TYPE': config('CACHE_TYPE', default='null'),
+    'CACHE_TYPE': config('CACHE_TYPE', default='null'), # caching is disabled, to enable set env var CACHE_TYPE=redis
     'CACHE_KEY_PREFIX': config('CACHE_KEY_PREFIX', default='fcache'),
     'CACHE_REDIS_URL': config('CACHE_REDIS_URL', default='redis://localhost:6379')
 })
