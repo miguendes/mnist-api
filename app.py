@@ -1,19 +1,28 @@
 import os
 
-from flask import Flask, jsonify, request
+from decouple import config
+from flask import Flask, jsonify, request, render_template
+from flask_caching import Cache
 
 import ml_models
 
 app = Flask(__name__)
 
+cache = Cache(app, config={
+    'CACHE_TYPE': config('CACHE_TYPE'),
+    'CACHE_KEY_PREFIX': config('CACHE_KEY_PREFIX'),
+    'CACHE_REDIS_URL': config('CACHE_REDIS_URL')
+})
+
 
 @app.route('/')
 def index():
-    """ The index endpoint. It just shows a message. """
-    return 'Web API | MNIST Challenge'
+    """ The index endpoint. It renders the home page. """
+    return render_template("home.html")
 
 
 @app.route('/predict/', methods=['POST'])
+@cache.cached(timeout=50)
 def predict():
     """ Predicts the digit corresponding to the image passed.
 
@@ -31,13 +40,18 @@ def predict():
     model = data['model']
     image = data['image']
 
-    model = ml_models.fetch(model)
-    prediction = model.predict(image)
+    try:
+        model = ml_models.fetch(model)
+        prediction = model.predict(image)
+    except ml_models.ModelNotFoundError:
+        available_models = ', '.join(ml_models.list_models())
+        return jsonify({"error": f"Unexpected model name. Only {available_models} models are available."}), 422
 
     return jsonify({"prediction": prediction})
 
 
 @app.route('/models/')
+@cache.cached(timeout=50)
 def models():
     """ Returns a list of all models available. """
     return jsonify({"models": ml_models.list_models()})

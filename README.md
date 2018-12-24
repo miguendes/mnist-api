@@ -26,6 +26,10 @@ To run the solution you need the following dependencies:
 - Pipenv 2018+
 - Jupyter Notebook
 - matplotlib
+- opencv-python
+- Pillow
+- gunicorn
+- seaborn
 
 To install Pipenv and Python 3.6 without messing up your environment, in case you don't have them installed,
  I strongly suggest 
@@ -46,11 +50,11 @@ $ git clone git@github.com:mendesmiguel/mnist-api.git
 To install all dependencies, you can use [pipenv](http://pipenv.org/).
 
 Pipenv will spin up a virtualenv and install the dependencies based on a `Pipenv` file inside the root of
-the project. Due to some problems with the latest version, I decided not to include a `Pipenv.lock` file.
+the project. 
 
 ``` {.sourceCode .bash}
 $ cd mnist-api/
-$ pipenv install --skip-lock
+$ pipenv install
 ```
 
 #### (Optional) Docker
@@ -63,7 +67,7 @@ docker run -d -p 5000:5000 docker-mnist-api
 ```
 
 
-How to run the app
+How to run the app locally
 ------------
 
 To run the project locally do:
@@ -116,12 +120,63 @@ All the implementation details are documented in the notebooks.
 
 Once we collect more data, we can test the performance of the current models and retrain them from time to time.
 
+### How to run the notebooks
+
+To run the jupyter notebooks where I performed the EDA and trained the models, do:
+
+``` {.sourceCode .bash}
+$ cd mnist-api/
+$ pipenv shell
+$ jupyter notebook
+```
+
+All notebooks are available on the `notebooks` directory.
+
 Scaling up
 -----------
 
-In order to scale this solution to thousands of requests a day one idea is to
-use a cache mechanism, like redis, varnish or memcached.
-Another idea is to use kubernets to scale it horizontally. The goal is to
+### Caching with Redis
+
+I performed a series of benchmarks using redis as caching mechanism and Apache Bench v2.3 to run the benchmark.
+The code is available on branch `feature/caching`.
+
+The difference between a cached API and a non-cached API is impressive. 
+I simulated a scenario where 10 clients are making 10000 requests each.
+The results are shown bellow:
+
+#### No cache
+```
+$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+....
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   0.6      3       4
+Processing:   714 38391 22153.1  38658   76232
+Waiting:      714 38390 22153.1  38657   76232
+Total:        718 38393 22152.5  38660   76234
+....
+
+```
+
+#### Caching with Redis
+The caching has a timeout of 50 seconds.
+```
+$ ab -p post_content.txt -T application/json -c 50 -n 10000 http://localhost:8000/predict/
+
+....
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.6      2       4
+Processing:   706  758  27.2    760     803
+Waiting:      705  758  27.2    760     803
+Total:        709  761  26.5    762     804
+....
+
+```
+
+### Aditional approaches
+
+Another idea is to use kubernets to scale it horizontally. In this setting a good idea is to
 have a load balancer such as Ngnix to handle the requests.
 
 
@@ -129,7 +184,7 @@ TODOs
 ------------
 - [x] Make the weights path on config file plataform agnostic
 - [x] Add tests coverage report 
-- [ ] Add memcached or Varnish to cache api calls
+- [x] Add memcached or Varnish to cache api calls
 - [ ] Add a new endpoint to retrain a model
-- [ ] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer
+- [x] Benchmark the API using Apache Bench (ab) and test with a cluster of containers and a load balancer
 - [ ] Make the model name optional on the predict endpoint so that the result of all models is returned
