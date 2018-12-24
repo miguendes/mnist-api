@@ -49,3 +49,12 @@ def test_predict_with_real_model(client, base64_image_file, expected_prediction,
 
     assert 200 == response.status_code
     assert {"prediction": expected_prediction} == json.loads(response.get_data(as_text=True))
+
+
+def test_unavailable_model(client):
+    """Tests if an error message is returned when a model does not exist."""
+    available_models = ', '.join(["cnn", "mlp", "svm"])
+    response = client.post('/predict/', json={'model': 'unavailable_model', 'image': 'image_b64'})
+    assert 422 == response.status_code
+    assert ({"error": f"Unexpected model name. Only {available_models} models are available."}
+            == json.loads(response.get_data(as_text=True)))
