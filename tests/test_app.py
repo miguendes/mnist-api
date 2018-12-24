@@ -9,7 +9,7 @@ path_prefix = path.dirname(path.abspath(__file__))
 fixtures_path = path.join(path_prefix, 'fixtures')
 ok_three_file = path.join(fixtures_path, 'ok_three.base64')
 large_four_file = path.join(fixtures_path, 'large_four.base64')
-invalid_file = open(path.join(fixtures_path, 'invalid.base64')).read()
+invalid_b64 = open(path.join(fixtures_path, 'invalid.base64')).read()
 
 
 @pytest.fixture(scope='module')
@@ -74,14 +74,14 @@ def test_unavailable_model(client):
     "cnn",
     "mlp",
 ])
-@pytest.mark.parametrize("base64_image_file", [
-    invalid_file,
+@pytest.mark.parametrize("base64_image", [
+    invalid_b64,
     'invalid_base64_image'
 ])
-def test_invalid_image(client, model_name, base64_image_file):
+def test_invalid_image(client, model_name, base64_image):
     """Tests if an error message is returned when an invalid image is passed."""
 
-    response = client.post('/predict/', json={'model': model_name, 'image': base64_image_file})
+    response = client.post('/predict/', json={'model': model_name, 'image': base64_image})
     assert 422 == response.status_code
     assert ({"error": "Could not perform the prediction. Invalid image base64 image."} == json.loads(
         response.get_data(as_text=True)))
