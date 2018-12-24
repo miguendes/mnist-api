@@ -2,7 +2,7 @@ MNIST Api
 ==========================
 
 [![Build Status](https://travis-ci.org/mendesmiguel/mnist-api.svg?branch=master)](https://travis-ci.org/mendesmiguel/mnist-api)
-[![codecov](https://codecov.io/gh/mendesmiguel/mnist-api/branch/develop/graph/badge.svg)](https://codecov.io/gh/mendesmiguel/mnist-api)
+[![codecov](https://codecov.io/gh/mendesmiguel/mnist-api/branch/master/graph/badge.svg)](https://codecov.io/gh/mendesmiguel/mnist-api)
 [![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.7/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
@@ -137,8 +137,7 @@ Scaling up
 
 ### Caching with Redis
 
-I performed a series of benchmarks using redis as caching mechanism and Apache Bench v2.3 to run the benchmark.
-The code is available on branch `feature/caching`.
+I performed a series of benchmarks using redis as caching mechanism and Apache Bench v2.3.
 
 The difference between a cached API and a non-cached API is impressive. 
 I simulated a scenario where 100 clients are making 100 requests each.
